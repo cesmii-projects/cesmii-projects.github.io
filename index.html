@@ -9,28 +9,25 @@
         // Instead of hard-coding the initial table data,
         // you could fetch it from your server.
         const dataTable = google.visualization.arrayToDataTable([
-          ['Year', 'Price'],
-          [2013, 400],
-          [2014, 460],
+          ['Time', 'Power (W)']
         ]);
         const chart = new google.visualization.AreaChart(
           document.getElementById('chart_div'));
         const options = {
-          title: '1 BTC in USD',
-          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          title: 'Live Power on CNC machine at ATAMI',
+          hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0},
           animation:{ duration: 100, easing: 'out' }
         };
         chart.draw(dataTable, options);
-        let year = 2015;
         Pusher.logToConsole = true;
         const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
           cluster: 'us3',              // Replace with 'cluster' from dashboard
           forceTLS: true
         });
-        const channel = pusher.subscribe('price-btcusd');
-        channel.bind('new-price', data => {
-          const row = [year++, data.value];
+        const channel = pusher.subscribe('live_power');
+        channel.bind('current_power', data => {
+          const row = [data.time, data.value];
           dataTable.addRow(row);
           chart.draw(dataTable, options);
         });
