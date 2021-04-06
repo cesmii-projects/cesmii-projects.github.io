@@ -9,16 +9,18 @@
         // Instead of hard-coding the initial table data,
         // you could fetch it from your server.
         const dataTable = google.visualization.arrayToDataTable([
-          ['Time', 'Power (W)']
+          ['Time', 'Power (W)'],
+	  [Date(),0]
         ]);
         const chart = new google.visualization.AreaChart(
           document.getElementById('chart_div'));
         const options = {
           title: 'Live Power on CNC machine at ATAMI',
-          hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0},
           animation:{ duration: 100, easing: 'out' }
         };
+
         chart.draw(dataTable, options);
         Pusher.logToConsole = true;
         const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
@@ -27,7 +29,7 @@
         });
         const channel = pusher.subscribe('live_power');
         channel.bind('current_power', data => {
-          const row = [data.time, data.value];
+          const row = [Date(), data.value];
           dataTable.addRow(row);
           chart.draw(dataTable, options);
         });
