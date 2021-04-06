@@ -4,6 +4,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
+      
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(() => {
         // Instead of hard-coding the initial table data,
@@ -16,11 +17,10 @@
           document.getElementById('chart_div'));
         const options = {
           title: 'Live Power on CNC machine at ATAMI',
-          hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
+          hAxis: {showTextEvery: 4, title: 'Time' , titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0},
-          animation:{ duration: 100, easing: 'out' }
+          animation:{ duration: 100, easing: 'inAndOut' }
         };
-
         chart.draw(dataTable, options);
         Pusher.logToConsole = true;
         const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
@@ -29,7 +29,7 @@
         });
         const channel = pusher.subscribe('live_power');
         channel.bind('current_power', data => {
-          const row = [Date(), data.power];
+          const row = [new Date(data.ye,data.mo,data.da,data.ho,data.mi,data.se), data.power];
           dataTable.addRow(row);
           chart.draw(dataTable, options);
         });
