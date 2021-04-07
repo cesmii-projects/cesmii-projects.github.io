@@ -4,14 +4,13 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
-      
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(() => {
         // Instead of hard-coding the initial table data,
         // you could fetch it from your server.
         const dataTable = google.visualization.arrayToDataTable([
           ['Time', 'Power (W)'],
-	  [Date(),0]
+          [Date(),0],
         ]);
         const chart = new google.visualization.AreaChart(
           document.getElementById('chart_div'));
