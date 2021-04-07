@@ -8,12 +8,14 @@
       google.charts.setOnLoadCallback(() => {
         // Instead of hard-coding the initial table data,
         // you could fetch it from your server.
+        
         const dataTable = google.visualization.arrayToDataTable([
           ['Time', 'Power (W)'],
           [new Date(),0],
         ]);
-        const chart = new google.visualization.AreaChart(
+        const chart = new google.visualization.ScatterChart(
           document.getElementById('chart_div'));
+
         const options = {
           title: 'Live Power on CNC machine at ATAMI',
           hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
@@ -21,11 +23,13 @@
           animation:{ duration: 100, easing: 'out' }
         };
         chart.draw(dataTable, options);
+
         Pusher.logToConsole = true;
         const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
           cluster: 'us3',              // Replace with 'cluster' from dashboard
           forceTLS: true
         });
+        
         const channel = pusher.subscribe('live_power');
         channel.bind('current_power', data => {
           const row = [new Date(data.ye,data.mo,data.da,data.ho,data.mi,data.se), data.power];
