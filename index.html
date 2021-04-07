@@ -28,9 +28,9 @@
           cluster: 'us3',                                   // Replace with 'cluster' from dashboard
           forceTLS: true
         });
-        const channel = pusher.subscribe('price-btcusd');
-        channel.bind('new-price', data => {
-          const row = [year++, data.value];
+        const channel = pusher.subscribe('live_power');
+        channel.bind('current_power', data => {
+          const row = [year++, data.power];
           dataTable.addRow(row);
           chart.draw(dataTable, options);
         });
