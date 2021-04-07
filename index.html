@@ -28,7 +28,7 @@
         });
         const channel = pusher.subscribe('live_power');
         channel.bind('current_power', data => {
-          const row = [new Date(2021,3,6,17,33,data.se), data.power];
+          const row = [new Date(data.ye,data.mo,data.da,data.ho,data.mi,data.se), data.power];
           dataTable.addRow(row);
           chart.draw(dataTable, options);
         });
