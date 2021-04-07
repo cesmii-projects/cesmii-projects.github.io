@@ -10,7 +10,7 @@
         // you could fetch it from your server.
         const dataTable = google.visualization.arrayToDataTable([
           ['Time', 'Power (W)'],
-          [Date(),0],
+          [new Date(),0],
         ]);
         const chart = new google.visualization.AreaChart(
           document.getElementById('chart_div'));
@@ -34,6 +34,6 @@
         });
       });
     </script>
-    updated: 2021-04-06-17-35 -7:00
+    updated: 2021-04-06-17-36 -7:00
   </body>
 </html>
