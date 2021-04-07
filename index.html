@@ -28,12 +28,12 @@
         });
         const channel = pusher.subscribe('live_power');
         channel.bind('current_power', data => {
-          const row = [new Data(2021,3,6,17,33,data.se), data.power];
+          const row = [new Date(2021,3,6,17,33,data.se), data.power];
           dataTable.addRow(row);
           chart.draw(dataTable, options);
         });
       });
     </script>
-    updated: 2021-04-06-17-34 -7:00
+    updated: 2021-04-06-17-35 -7:00
   </body>
 </html>
