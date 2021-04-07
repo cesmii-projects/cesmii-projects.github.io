@@ -17,9 +17,9 @@
           document.getElementById('chart_div'));
         const options = {
           title: 'Live Power on CNC machine at ATAMI',
-          hAxis: {showTextEvery: 4, title: 'Time' , titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0},
-          animation:{ duration: 100, easing: 'inAndOut' }
+          animation:{ duration: 100, easing: 'out' }
         };
         chart.draw(dataTable, options);
         Pusher.logToConsole = true;
