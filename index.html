@@ -19,9 +19,7 @@
       <div class="columns">
         <div class="column">
           <h5 class="title is-6">Power (W)</h5>
-          <div id="Live_Power_Chart" class="chart" style="width: 100%; height: 500px;">
-            Live Plot
-          </div>
+          <div id="Live_Power_Chart" class="chart" style="width: 79%; height: 500px;"></div>
         </div>
       </div>
     </div>
@@ -30,16 +28,7 @@
     <div class="container">
       <div id="live_img" style="width: 400px; height: 300px;">
         Live image of CNC machine
-        <img src="imgs/test_img.png" class="inline"/>
-        <script type="text/javascript" language="javascript">
-        $(document).ready(function() { /// Wait till page is loaded
-           $('#live_img').click(function(){
-              $('#live_img').load(document.URL +  ' #live_img', function() {
-                   /// can add another function here
-              });
-           });
-        }); //// End of Wait till page is loaded
-        </script>
+        <img src="imgs/test_img.png" alt="hi" class="inline"/>
       </div>
     </div>
   </section>
@@ -47,52 +36,64 @@
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(() => {
-        // Instead of hard-coding the initial table data,
-        // you could fetch it from your server.
-        
-        const dataTable = google.visualization.arrayToDataTable([
-          ['Time', 'Power (W)'],
-          [new Date('hh-mm-ss'),0],
-        ]);
-        const chart = new google.visualization.ScatterChart(
-          document.getElementById('Live_Power_Chart'));
+    $(document).ready( function() {
+      refresh();
+    });
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(() => {
+      // Instead of hard-coding the initial table data,
+      // you could fetch it from your server.
+      
+      const dataTable = google.visualization.arrayToDataTable([
+        ['Time', 'Power (W)'],
+        [new Date('hh-mm-ss'),0],
+      ]);
+      const chart = new google.visualization.ScatterChart(
+        document.getElementById('Live_Power_Chart'));
 
-        const options = {
-          hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0},
-          animation:{ duration: 100, easing: 'inAndout' }
-        };
+      const options = {
+        hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        animation:{ duration: 100, easing: 'inAndout' }
+      };
+      chart.draw(dataTable, options);
+
+      Pusher.logToConsole = true;
+      const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
+        cluster: 'us3',              // Replace with 'cluster' from dashboard
+        forceTLS: true
+      });
+      
+      const channel = pusher.subscribe('live_power');
+      channel.bind('current_power', data1 => {
+        const row = [new Date(data1.ye,data1.mo,data1.da,data1.ho,data1.mi,data1.se), data1.power];
+        dataTable.addRow(row);
         chart.draw(dataTable, options);
+      });
+    });
 
-        Pusher.logToConsole = true;
-        const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
-          cluster: 'us3',              // Replace with 'cluster' from dashboard
-          forceTLS: true
-        });
-        
-        const channel = pusher.subscribe('live_power');
-        channel.bind('current_power', data1 => {
-          const row = [new Date(data1.ye,data1.mo,data1.da,data1.ho,data1.mi,data1.se), data1.power];
-          dataTable.addRow(row);
-          chart.draw(dataTable, options);
-        });
-      });
+    const pusher2 = new Pusher('273048494971ee875e63', {
+      cluster: 'us3', // gotten from Pusher app dashboard
+      encrypted: true, // optional
+    });
+    // subscribe to crypto channel
+    const channel2 = pusher2.subscribe('crypto')
+    // listen for relevant events
+    channel2.bind('data-updated', data2 => {
+        const graph = JSON.parse(data2.graph);
+        Plotly.newPlot('History_Power_Chart', graph);
+    });
 
-      const pusher2 = new Pusher('273048494971ee875e63', {
-        cluster: 'us3', // gotten from Pusher app dashboard
-        encrypted: true, // optional
-      });
-      // subscribe to crypto channel
-      const channel2 = pusher2.subscribe('crypto')
-      // listen for relevant events
-      channel2.bind('data-updated', data2 => {
-          const graph = JSON.parse(data2.graph);
-          Plotly.newPlot('History_Power_Chart', graph);
-      });
-    </script>
+    function refresh()
+    {
+      setTimeout( function() {
+        $('#live_img').fadeOut('slow').load(document.URL + ' #live_img').fadeIn('slow');
+        refresh();
+      },1000);
+    };
+  </script>
   updated: 2021-04-22-14-15 -7:00
 </body>
 </html>
