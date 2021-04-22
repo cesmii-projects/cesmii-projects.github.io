@@ -29,8 +29,18 @@
   <section class="hisotry">
     <div class="container">
       <div id="live_img" style="width: 400px; height: 300px;">
-      Live image of CNC machine
-      <img src="imgs/test_img.png" class="inline"/>
+        Live image of CNC machine
+        <img src="imgs/test_img.png" class="inline"/>
+        <script type="text/javascript" language="javascript">
+        $(document).ready(function() { /// Wait till page is loaded
+           $('#live_img').click(function(){
+              $('#live_img').load(document.URL +  ' #live_img', function() {
+                   /// can add another function here
+              });
+           });
+        }); //// End of Wait till page is loaded
+        </script>
+      </div>
     </div>
   </section>
   <!-- <div id="chart_div" style="width: 100%; height: 200px;"></div> -->
