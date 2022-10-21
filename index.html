@@ -29,12 +29,13 @@
     </div>
   </section>
 
-  <section class="scan">
-    </div>
+<!--   <section class="scan">
     <div class="container-fluid" style="margin-top:40px">
       <iframe src="test.html" height="500px"></iframe>
     </div>
-  </section>
+  </section> -->
+    
+    
   <!-- <div id="chart_div" style="width: 100%; height: 200px;"></div> -->
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
@@ -77,25 +78,26 @@
       });
     });
 
-    const pusher2 = new Pusher('273048494971ee875e63', {
-      cluster: 'us3', // gotten from Pusher app dashboard
-      encrypted: true, // optional
-    });
-    // subscribe to crypto channel
-    const channel2 = pusher2.subscribe('crypto')
-    // listen for relevant events
-    channel2.bind('data-updated', data2 => {
-        const graph = JSON.parse(data2.graph);
-        Plotly.newPlot('History_Power_Chart', graph);
-    });
+//     const pusher2 = new Pusher('273048494971ee875e63', {
+//       cluster: 'us3', // gotten from Pusher app dashboard
+//       encrypted: true, // optional
+//     });
+//     // subscribe to crypto channel
+      
+//     const channel2 = pusher2.subscribe('crypto')
+//     // listen for relevant events
+//     channel2.bind('data-updated', data2 => {
+//         const graph = JSON.parse(data2.graph);
+//         Plotly.newPlot('History_Power_Chart', graph);
+//     });
 
-    function refresh()
-    {
-      setTimeout( function() {
-        $('#live_img').fadeOut('slow').load(document.URL + ' #live_img').fadeIn('slow');
-        refresh();
-      },10000);
-    };
+//     function refresh()
+//     {
+//       setTimeout( function() {
+//         $('#live_img').fadeOut('slow').load(document.URL + ' #live_img').fadeIn('slow');
+//         refresh();
+//       },10000);
+//     };
   </script>
   updated: 2021-04-22-14-15 -7:00
 </body>
