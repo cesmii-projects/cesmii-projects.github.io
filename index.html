@@ -11,20 +11,36 @@
   </style>
 </head>
 <body>
-  <section class="live">
+  <section class="power">
     <div class="container">
-      <h1 class="title"><strong>Live Power on CNC machine at ATAMI</strong></h1>
-      <p class="subtitle">View live power data of HAAS VF-2 machine at ATAMI!</p>
+      <h1 class="title"><strong>Live Data on CNC machine at ATAMI</strong></h1>
+      <p class="subtitle">View live data of HAAS VF-2 machine.</p>
       <hr>
       <div class="columns">
         <div class="column">
           <h5 class="title is-6">Power (W)</h5>
-          <div id="Live_Power_Chart" class="chart" style="width: 100%; height: 500px;"></div>
+          <div id="Live_Power_Chart" class="chart" style="width: 100%; height: 300px;"></div>
         </div>
-<!--         <div id="live_img" style="width: 25%; height: 300px;">
-          Live image of CNC machine
-          <img src="imgs/test_img.png" class="inline"/>
-        </div> -->
+      </div>
+    </div>
+  </section>
+  <section class="temp">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <h5 class="title is-6">Temperature (C)</h5>
+          <div id="Live_temp_Chart" class="chart2" style="width: 100%; height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="acoustic">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <h5 class="title is-6">Acoustic Emission (V)</h5>
+          <div id="Live_ae_Chart" class="chart3" style="width: 100%; height: 300px;"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -42,14 +58,17 @@
   <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript">
+      
     $(document).ready( function() {
       refresh();
     });
+      
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(() => {
       // Instead of hard-coding the initial table data,
       // you could fetch it from your server.
-      
+        
+ // ................... POWER ............................ //     
       const dataTable = google.visualization.arrayToDataTable([
         ['Time', 'Power (W)'],
         [new Date('hh-mm-ss'),0],
@@ -72,33 +91,65 @@
       
       const channel = pusher.subscribe('live_power');
       channel.bind('current_power', data1 => {
-        const row = [new Date(data1.ye,data1.mo,data1.da,data1.ho,data1.mi,data1.se), data1.power];
+        const row = [new Date(data1.ye,data1.mo,data1.da,data1.ho,data1.mi,data1.se,data1.ms), data1.power];
         dataTable.addRow(row);
         chart.draw(dataTable, options);
       });
-    });
+// ................... TEMP ............................ //
+      const dataTable2 = google.visualization.arrayToDataTable([
+        ['Time', 'Temp (C)'],
+        [new Date('hh-mm-ss'),0],
+      ]);
+      const chart2 = new google.visualization.ScatterChart(
+        document.getElementById('Live_temp_Chart'));
 
-//     const pusher2 = new Pusher('273048494971ee875e63', {
-//       cluster: 'us3', // gotten from Pusher app dashboard
-//       encrypted: true, // optional
-//     });
-//     // subscribe to crypto channel
+      const options2 = {
+        hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        animation:{ duration: 100, easing: 'inAndout' }
+      };
+      chart2.draw(dataTable2, options2);
+        
+      const pusher2 = new Pusher('7ed63ca2bc241415db8f', { // Replace with 'key' from dashboard
+        cluster: 'us3',              // Replace with 'cluster' from dashboard
+        forceTLS: true
+      });
       
-//     const channel2 = pusher2.subscribe('crypto')
-//     // listen for relevant events
-//     channel2.bind('data-updated', data2 => {
-//         const graph = JSON.parse(data2.graph);
-//         Plotly.newPlot('History_Power_Chart', graph);
-//     });
+      const channel2 = pusher2.subscribe('live_temp');
+      channel2.bind('current_temp', data2 => {
+        const row2 = [new Date(data2.ye,data2.mo,data2.da,data2.ho,data2.mi,data2.se,data2.ms), data2.temp];
+        dataTable2.addRow(row2);
+        chart2.draw(dataTable2, options2);
+      });
+        
+// ................... ACOUSTIC EMISSION ............................ //
+      const dataTable3 = google.visualization.arrayToDataTable([
+        ['Time', 'Voltage (V)'],
+        [new Date('hh-mm-ss'),0],
+      ]);
+      const chart3 = new google.visualization.ScatterChart(
+        document.getElementById('Live_ae_Chart'));
 
-//     function refresh()
-//     {
-//       setTimeout( function() {
-//         $('#live_img').fadeOut('slow').load(document.URL + ' #live_img').fadeIn('slow');
-//         refresh();
-//       },10000);
-//     };
+      const options3 = {
+        hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        animation:{ duration: 100, easing: 'inAndout' }
+      };
+      chart3.draw(dataTable3, options3);
+        
+      const pusher3 = new Pusher('ae00cc78fac228b3fd0e', { // Replace with 'key' from dashboard
+        cluster: 'us3',              // Replace with 'cluster' from dashboard
+        forceTLS: true
+      });
+      
+      const channel3 = pusher3.subscribe('live_ae');
+      channel3.bind('current_ae', data3 => {
+        const row3 = [new Date(data3.ye,data3.mo,data3.da,data3.ho,data3.mi,data3.se,data3.ms), data3.acoustic];
+        dataTable3.addRow(row3);
+        chart3.draw(dataTable3, options3);
+      });
+    });
   </script>
-  updated: 2021-04-22-14-15 -7:00
+  updated: 2022-10-21-16-00 -7:00
 </body>
 </html>
