@@ -186,7 +186,7 @@
         forceTLS: true
       });
       
-      const channel4 = pusher4.subscribe('live_ae');
+      const channel4 = pusher4.subscribe('live_acc');
       channel4.bind('current_acc', data4 => {
         const row4 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_x];
         dataTable4.addRow(row4);
