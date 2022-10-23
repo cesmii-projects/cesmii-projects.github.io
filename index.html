@@ -44,6 +44,16 @@
       </div>
     </div>
   </section>
+  <section class="Accelerometer">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <h5 class="title is-6">Accelerometer (F)</h5>
+          <div id="Live_acc_Chart" class="chart4" style="width: 100%; height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 <!--   <section class="scan">
     <div class="container-fluid" style="margin-top:40px">
@@ -81,7 +91,6 @@
         vAxis: {minValue: 0},
         animation:{ duration: 100, easing: 'inAndout' }
       };
-      chart.draw(dataTable, options);
 
       Pusher.logToConsole = true;
       const pusher = new Pusher('d1fdb3f9f438ffe7ba1a', { // Replace with 'key' from dashboard
@@ -108,7 +117,6 @@
         vAxis: {minValue: 0},
         animation:{ duration: 100, easing: 'inAndout' }
       };
-      chart2.draw(dataTable2, options2);
         
       const pusher2 = new Pusher('7ed63ca2bc241415db8f', { // Replace with 'key' from dashboard
         cluster: 'us3',              // Replace with 'cluster' from dashboard
@@ -135,7 +143,6 @@
         vAxis: {minValue: 0},
         animation:{ duration: 100, easing: 'inAndout' }
       };
-      chart3.draw(dataTable3, options3);
         
       const pusher3 = new Pusher('ae00cc78fac228b3fd0e', { // Replace with 'key' from dashboard
         cluster: 'us3',              // Replace with 'cluster' from dashboard
@@ -147,6 +154,49 @@
         const row3 = [new Date(data3.ye,data3.mo,data3.da,data3.ho,data3.mi,data3.se,data3.ms), data3.acoustic];
         dataTable3.addRow(row3);
         chart3.draw(dataTable3, options3);
+      });
+// ................... ACCELERATION ............................ //
+      const dataTable4 = google.visualization.arrayToDataTable([
+        ['Time', ' Force (kN)'],
+        [new Date('hh-mm-ss'),0],
+      ]);
+      const chart4 = new google.visualization.ScatterChart(
+        document.getElementById('Live_acc_Chart'));
+
+      const options4 = {
+        hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        animation:{ duration: 100, easing: 'inAndout' }
+      };
+        
+      const options5 = {
+        hAxis: {title: 'Time' , titleTextStyle: {color: '#FF3'}},
+        vAxis: {minValue: 0},
+        animation:{ duration: 100, easing: 'inAndout' }
+      };
+        
+      const options6 = {
+        hAxis: {title: 'Time' , titleTextStyle: {color: '#33C'}},
+        vAxis: {minValue: 0},
+        animation:{ duration: 100, easing: 'inAndout' }
+      };
+        
+      const pusher4 = new Pusher('054ba50a2a1662cd7953', { // Replace with 'key' from dashboard
+        cluster: 'us3',              // Replace with 'cluster' from dashboard
+        forceTLS: true
+      });
+      
+      const channel4 = pusher4.subscribe('live_ae');
+      channel4.bind('current_acc', data4 => {
+        const row4 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_x];
+        dataTable4.addRow(row4);
+        chart4.draw(dataTable4, options4);
+        const row5 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_y];
+        dataTable4.addRow(row5);
+        chart4.draw(dataTable4, options5);
+        const row6 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_z];
+        dataTable4.addRow(row6);
+        chart4.draw(dataTable4, options6);
       });
     });
   </script>
