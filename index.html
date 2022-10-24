@@ -49,7 +49,9 @@
       <div class="columns">
         <div class="column">
           <h5 class="title is-6">Accelerometer (F)</h5>
-          <div id="Live_acc_Chart" class="chart4" style="width: 100%; height: 300px;"></div>
+          <div id="Live_acc_Chart_x" class="chart4" style="width: 100%; height: #100px;"></div>
+          <div id="Live_acc_Chart_y" class="chart5" style="width: 100%; height: #100px;"></div>
+          <div id="Live_acc_Chart_z" class="chart6" style="width: 100%; height: #100px;"></div>
         </div>
       </div>
     </div>
@@ -157,30 +159,19 @@
       });
 // ................... ACCELERATION ............................ //
       const dataTable4 = google.visualization.arrayToDataTable([
-        ['Time', ' Force (kN)'],
+        ['Time', ' X-Force (kN)'],
         [new Date('hh-mm-ss'),0],
       ]);
+        
       const chart4 = new google.visualization.ScatterChart(
-        document.getElementById('Live_acc_Chart'));
+        document.getElementById('Live_acc_Chart_x'));
 
       const options4 = {
-        hAxis: {title: 'Time' , titleTextStyle: {color: '#333'}},
+        hAxis: {title: 'Time' , titleTextStyle: {colors: '#333'}},
         vAxis: {minValue: 0},
         animation:{ duration: 100, easing: 'inAndout' }
       };
-        
-      const options5 = {
-        hAxis: {title: 'Time' , titleTextStyle: {color: '#FF3'}},
-        vAxis: {minValue: 0},
-        animation:{ duration: 100, easing: 'inAndout' }
-      };
-        
-      const options6 = {
-        hAxis: {title: 'Time' , titleTextStyle: {color: '#33C'}},
-        vAxis: {minValue: 0},
-        animation:{ duration: 100, easing: 'inAndout' }
-      };
-        
+
       const pusher4 = new Pusher('054ba50a2a1662cd7953', { // Replace with 'key' from dashboard
         cluster: 'us3',              // Replace with 'cluster' from dashboard
         forceTLS: true
@@ -191,15 +182,40 @@
         const row4 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_x];
         dataTable4.addRow(row4);
         chart4.draw(dataTable4, options4);
-        const row5 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_y];
-        dataTable4.addRow(row5);
-        chart4.draw(dataTable4, options5);
-        const row6 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_z];
-        dataTable4.addRow(row6);
-        chart4.draw(dataTable4, options6);
       });
+        
+      const dataTable5 = google.visualization.arrayToDataTable([
+        ['Time', ' Y-Force (kN)'],
+        [new Date('hh-mm-ss'),0],
+      ]);
+        
+      const chart5 = new google.visualization.ScatterChart(
+        document.getElementById('Live_acc_Chart_y'));
+        
+      const channel5 = pusher4.subscribe('live_acc');
+      channel5.bind('current_acc', data4 => {
+        const row5 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_y];
+        dataTable5.addRow(row5);
+        chart5.draw(dataTable5, options4);
+      });
+        
+      const dataTable6 = google.visualization.arrayToDataTable([
+        ['Time', ' Z-Force (kN)'],
+        [new Date('hh-mm-ss'),0],
+      ]);
+        
+      const chart6 = new google.visualization.ScatterChart(
+        document.getElementById('Live_acc_Chart_z'));
+    
+      const channel6 = pusher4.subscribe('live_acc');
+      channel6.bind('current_acc', data4 => {
+        const row6 = [new Date(data4.ye,data4.mo,data4.da,data4.ho,data4.mi,data4.se,data4.ms), data4.acc_z];
+        dataTable6.addRow(row6);
+        chart6.draw(dataTable6, options4);
+      });
+        
     });
   </script>
-  updated: 2022-10-21-16-00 -7:00
+  updated: 2022-10-23-22-32 -7:00
 </body>
 </html>
